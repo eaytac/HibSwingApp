@@ -1,7 +1,9 @@
 package com.vektorel.hibswingapp.ui;
 
 import com.vektorel.hibswingapp.entity.Kullanici;
+import com.vektorel.hibswingapp.entity.Ogrenci;
 import com.vektorel.hibswingapp.service.KullaniciService;
+import com.vektorel.hibswingapp.service.OgrenciService;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -9,6 +11,7 @@ public class frmAnasayfa extends javax.swing.JFrame {
 
     Kullanici kullanici;
     KullaniciService kullaniciService = new KullaniciService();
+    OgrenciService ogrenciService = new OgrenciService();
 
     public frmAnasayfa(Kullanici kullanici) {
         initComponents();
@@ -38,7 +41,8 @@ public class frmAnasayfa extends javax.swing.JFrame {
         mnuKullaniciSil = new javax.swing.JMenuItem();
         mnuKullaniciGuncelle = new javax.swing.JMenuItem();
         mnuOgrenciIslemleri = new javax.swing.JMenu();
-        jMenu1 = new javax.swing.JMenu();
+        mnuOgrenciListesi = new javax.swing.JMenuItem();
+        mnuCikis = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -67,11 +71,11 @@ public class frmAnasayfa extends javax.swing.JFrame {
         pnlAnasayfaLayout.setHorizontalGroup(
             pnlAnasayfaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAnasayfaLayout.createSequentialGroup()
-                .addComponent(txtAra, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAra, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                .addGap(8, 8, 8))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(txtAra, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnAra, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2))
+            .addComponent(jScrollPane1)
         );
         pnlAnasayfaLayout.setVerticalGroup(
             pnlAnasayfaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -81,7 +85,7 @@ public class frmAnasayfa extends javax.swing.JFrame {
                     .addComponent(txtAra, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAra, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 354, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jScrollPane1))
         );
 
         mnuKullaniciIslemleri.setText("Kullanıcı İşlemleri");
@@ -121,10 +125,19 @@ public class frmAnasayfa extends javax.swing.JFrame {
         jMenuBar1.add(mnuKullaniciIslemleri);
 
         mnuOgrenciIslemleri.setText("Öğrenci İşlemleri");
+
+        mnuOgrenciListesi.setText("Öğrenci Listesi");
+        mnuOgrenciListesi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuOgrenciListesiActionPerformed(evt);
+            }
+        });
+        mnuOgrenciIslemleri.add(mnuOgrenciListesi);
+
         jMenuBar1.add(mnuOgrenciIslemleri);
 
-        jMenu1.setText("Tanımlar");
-        jMenuBar1.add(jMenu1);
+        mnuCikis.setText("Çıkış");
+        jMenuBar1.add(mnuCikis);
 
         setJMenuBar(jMenuBar1);
 
@@ -136,7 +149,9 @@ public class frmAnasayfa extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(pnlAnasayfa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(pnlAnasayfa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -193,17 +208,23 @@ public class frmAnasayfa extends javax.swing.JFrame {
         kullaniciTabloDoldur(query);
     }//GEN-LAST:event_btnAraActionPerformed
 
+    private void mnuOgrenciListesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuOgrenciListesiActionPerformed
+        String query = txtAra.getText();
+        ogrenciTabloDoldur(query);
+    }//GEN-LAST:event_mnuOgrenciListesiActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAra;
-    private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenu mnuCikis;
     private javax.swing.JMenuItem mnuKullaniciEkle;
     private javax.swing.JMenuItem mnuKullaniciGuncelle;
     private javax.swing.JMenu mnuKullaniciIslemleri;
     private javax.swing.JMenuItem mnuKullaniciListe;
     private javax.swing.JMenuItem mnuKullaniciSil;
     private javax.swing.JMenu mnuOgrenciIslemleri;
+    private javax.swing.JMenuItem mnuOgrenciListesi;
     private javax.swing.JPanel pnlAnasayfa;
     private javax.swing.JTable tblAnasayfa;
     private javax.swing.JTextField txtAra;
@@ -225,6 +246,34 @@ public class frmAnasayfa extends javax.swing.JFrame {
                 data,
                 new String[]{
                     "No", "Ad Soyad", "Kullanıcı Adı"
+                }
+        ));
+    }
+    
+    private void ogrenciTabloDoldur(String query) {
+        goster();
+
+        List<Ogrenci> ogrenciler = ogrenciService.getAll(query);
+        String[][] data = new String[ogrenciler.size()][11];
+
+        for (int i = 0; i < ogrenciler.size(); i++) {
+            data[i][0] = ogrenciler.get(i).getId().toString();
+            data[i][1] = ogrenciler.get(i).getOkulNo();
+            data[i][2] = ogrenciler.get(i).getAd();
+            data[i][3] = ogrenciler.get(i).getSoyad();
+            data[i][4] = ogrenciler.get(i).getAdres();
+            data[i][5] = ogrenciler.get(i).getDogumTarihi().toString();
+            data[i][6] = ogrenciler.get(i).getOkulaBaslamaTarihi().toString();
+            data[i][7] = (ogrenciler.get(i).getCinsiyet() == 0 ? "Erkek" : "Kadın");  //Eğer cinsiyet 0 ise erkek, değil ise Kadın
+            data[i][8] = ogrenciler.get(i).getAktif().toString();
+            data[i][9] = ogrenciler.get(i).getTcKimlikNo().toString();
+            data[i][10] = ogrenciler.get(i).getBolum().getBolumAdi();
+        }
+
+        tblAnasayfa.setModel(new javax.swing.table.DefaultTableModel(
+                data,
+                new String[]{
+                    "No", "Okul No", "Ad", "Soyad", "Adres", "Doğum Tarihi", "Okula Başlama Tarihi", "Cinsiyet", "Aktif", "TC Kimlik No", "Bölüm"
                 }
         ));
     }

@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 public class OgrenciService implements IService<Ogrenci> {
@@ -50,6 +52,16 @@ public class OgrenciService implements IService<Ogrenci> {
     public List<Ogrenci> getAll(String query) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Criteria criteria = session.createCriteria(Ogrenci.class);
+        if (query != null){
+        criteria.add(Restrictions.or(Restrictions.ilike("ad", query, MatchMode.ANYWHERE), 
+                Restrictions.ilike("soyad", query, MatchMode.ANYWHERE),
+                Restrictions.ilike("adres", query, MatchMode.ANYWHERE),
+                Restrictions.ilike("okul_no", query, MatchMode.ANYWHERE),
+                Restrictions.ilike("dogum_tarihi", query, MatchMode.ANYWHERE),
+                Restrictions.ilike("okula_baslama_tarihi", query, MatchMode.ANYWHERE),
+                Restrictions.ilike("tc_no", query, MatchMode.ANYWHERE)));
+        }
+        criteria.addOrder(Order.asc("id"));
         return criteria.list();
     }
 
