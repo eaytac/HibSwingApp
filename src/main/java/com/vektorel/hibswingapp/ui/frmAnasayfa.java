@@ -4,6 +4,7 @@ import com.vektorel.hibswingapp.entity.Kullanici;
 import com.vektorel.hibswingapp.entity.Ogrenci;
 import com.vektorel.hibswingapp.service.KullaniciService;
 import com.vektorel.hibswingapp.service.OgrenciService;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -42,6 +43,9 @@ public class frmAnasayfa extends javax.swing.JFrame {
         mnuKullaniciGuncelle = new javax.swing.JMenuItem();
         mnuOgrenciIslemleri = new javax.swing.JMenu();
         mnuOgrenciListesi = new javax.swing.JMenuItem();
+        mnuOgrenciEkle = new javax.swing.JMenuItem();
+        mnuOgrenciSil = new javax.swing.JMenuItem();
+        mnuOgrenciGuncelle = new javax.swing.JMenuItem();
         mnuCikis = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -71,11 +75,11 @@ public class frmAnasayfa extends javax.swing.JFrame {
         pnlAnasayfaLayout.setHorizontalGroup(
             pnlAnasayfaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlAnasayfaLayout.createSequentialGroup()
-                .addComponent(txtAra, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtAra)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnAra, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(2, 2, 2))
-            .addComponent(jScrollPane1)
+                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
         );
         pnlAnasayfaLayout.setVerticalGroup(
             pnlAnasayfaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,6 +137,30 @@ public class frmAnasayfa extends javax.swing.JFrame {
             }
         });
         mnuOgrenciIslemleri.add(mnuOgrenciListesi);
+
+        mnuOgrenciEkle.setText("Öğrenci Ekle");
+        mnuOgrenciEkle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuOgrenciEkleActionPerformed(evt);
+            }
+        });
+        mnuOgrenciIslemleri.add(mnuOgrenciEkle);
+
+        mnuOgrenciSil.setText("Öğrenci Sil");
+        mnuOgrenciSil.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuOgrenciSilActionPerformed(evt);
+            }
+        });
+        mnuOgrenciIslemleri.add(mnuOgrenciSil);
+
+        mnuOgrenciGuncelle.setText("Öğrenci Güncelle");
+        mnuOgrenciGuncelle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuOgrenciGuncelleActionPerformed(evt);
+            }
+        });
+        mnuOgrenciIslemleri.add(mnuOgrenciGuncelle);
 
         jMenuBar1.add(mnuOgrenciIslemleri);
 
@@ -205,13 +233,61 @@ public class frmAnasayfa extends javax.swing.JFrame {
 
     private void btnAraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAraActionPerformed
         String query = txtAra.getText();
-        kullaniciTabloDoldur(query);
+        
+        if(tblAnasayfa.getColumnName(1) == "Ad Soyad") {
+            kullaniciTabloDoldur(query);
+            txtAra.setText("");
+        } else {
+            ogrenciTabloDoldur(query);
+            txtAra.setText("");
+        }
     }//GEN-LAST:event_btnAraActionPerformed
 
     private void mnuOgrenciListesiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuOgrenciListesiActionPerformed
-        String query = txtAra.getText();
-        ogrenciTabloDoldur(query);
+        ogrenciTabloDoldur(null);
     }//GEN-LAST:event_mnuOgrenciListesiActionPerformed
+
+    private void mnuOgrenciEkleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuOgrenciEkleActionPerformed
+        frmOgrenciEkle ogrenciEkle = new frmOgrenciEkle(this, true);
+        ogrenciEkle.setVisible(true);
+        ogrenciTabloDoldur(null);
+    }//GEN-LAST:event_mnuOgrenciEkleActionPerformed
+
+    private void mnuOgrenciSilActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuOgrenciSilActionPerformed
+        if (tblAnasayfa.getSelectedRowCount()> 1){
+            JOptionPane.showMessageDialog(rootPane, "Lütfen sadece bir adet kayıt seçiniz!", "Fazla Kayıt Seçildi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        int seciliKayit = tblAnasayfa.getSelectedRow();
+        if (seciliKayit > -1) {
+            int secim = JOptionPane.showConfirmDialog(rootPane, "Seçili kaydı silmek istediğinizden emin misiniz?", "Dikkat", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+            if (secim == 0) {
+                String value = tblAnasayfa.getValueAt(seciliKayit, 0).toString();
+                Ogrenci ogrenci = ogrenciService.getById(new Long(value));
+                ogrenciService.delete(ogrenci);
+                ogrenciTabloDoldur(null);
+            }
+        } else {
+            JOptionPane.showMessageDialog(rootPane, "Lütfen silmek istediğiniz kaydı tablodan seçiniz!", "Kayıt Seçilmedi", JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_mnuOgrenciSilActionPerformed
+
+    private void mnuOgrenciGuncelleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuOgrenciGuncelleActionPerformed
+        if (tblAnasayfa.getSelectedRowCount()> 1){
+            JOptionPane.showMessageDialog(rootPane, "Lütfen sadece bir adet kayıt seçiniz!", "Fazla Kayıt Seçildi", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int seciliKayit = tblAnasayfa.getSelectedRow();
+        if (seciliKayit > -1) {
+            String value = tblAnasayfa.getValueAt(seciliKayit, 0).toString();
+            Ogrenci ogrenci = ogrenciService.getById(new Long(value));
+            frmOgrenciEkle guncelle = new frmOgrenciEkle(this, true, ogrenci);
+            guncelle.setVisible(true);
+            ogrenciTabloDoldur(null);
+        }
+    }//GEN-LAST:event_mnuOgrenciGuncelleActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAra;
@@ -223,8 +299,11 @@ public class frmAnasayfa extends javax.swing.JFrame {
     private javax.swing.JMenu mnuKullaniciIslemleri;
     private javax.swing.JMenuItem mnuKullaniciListe;
     private javax.swing.JMenuItem mnuKullaniciSil;
+    private javax.swing.JMenuItem mnuOgrenciEkle;
+    private javax.swing.JMenuItem mnuOgrenciGuncelle;
     private javax.swing.JMenu mnuOgrenciIslemleri;
     private javax.swing.JMenuItem mnuOgrenciListesi;
+    private javax.swing.JMenuItem mnuOgrenciSil;
     private javax.swing.JPanel pnlAnasayfa;
     private javax.swing.JTable tblAnasayfa;
     private javax.swing.JTextField txtAra;
@@ -252,26 +331,41 @@ public class frmAnasayfa extends javax.swing.JFrame {
     
     private void ogrenciTabloDoldur(String query) {
         goster();
+        
 
-        List<Ogrenci> ogrenciler = ogrenciService.getAll(query);
-        String[][] data = new String[ogrenciler.size()][11];
+        List<Ogrenci> ogrenciler = null;
+        ogrenciler = ogrenciService.getAll(query);
+                
+        String[][] ogrenciData = new String[ogrenciler.size()][11];
 
         for (int i = 0; i < ogrenciler.size(); i++) {
-            data[i][0] = ogrenciler.get(i).getId().toString();
-            data[i][1] = ogrenciler.get(i).getOkulNo();
-            data[i][2] = ogrenciler.get(i).getAd();
-            data[i][3] = ogrenciler.get(i).getSoyad();
-            data[i][4] = ogrenciler.get(i).getAdres();
-            data[i][5] = ogrenciler.get(i).getDogumTarihi().toString();
-            data[i][6] = ogrenciler.get(i).getOkulaBaslamaTarihi().toString();
-            data[i][7] = (ogrenciler.get(i).getCinsiyet() == 0 ? "Erkek" : "Kadın");  //Eğer cinsiyet 0 ise erkek, değil ise Kadın
-            data[i][8] = ogrenciler.get(i).getAktif().toString();
-            data[i][9] = ogrenciler.get(i).getTcKimlikNo().toString();
-            data[i][10] = ogrenciler.get(i).getBolum().getBolumAdi();
+            Ogrenci o = ogrenciler.get(i);
+            
+            ogrenciData[i][0] = o.getId().toString();
+            ogrenciData[i][1] = o.getOkulNo();
+            ogrenciData[i][2] = o.getAd();
+            ogrenciData[i][3] = o.getSoyad();
+            ogrenciData[i][4] = o.getAdres();
+            
+            SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+            if (o.getDogumTarihi() != null) {
+                ogrenciData[i][5] = format.format(o.getDogumTarihi());
+            }
+            if (o.getOkulaBaslamaTarihi() != null) {
+                ogrenciData[i][6] = format.format(o.getOkulaBaslamaTarihi());
+            }
+            
+            ogrenciData[i][7] = (o.getCinsiyet() == 0 ? "Erkek" : "Kadın");  //Eğer cinsiyet 0 ise erkek, değil ise Kadın
+            ogrenciData[i][8] = (o.getAktif() ? "Evet" : "Hayır");
+            ogrenciData[i][9] = o.getTcKimlikNo().toString();
+            
+            if (o.getBolum() != null) {
+                ogrenciData[i][10] = o.getBolum().getBolumAdi();
+            }
         }
 
         tblAnasayfa.setModel(new javax.swing.table.DefaultTableModel(
-                data,
+                ogrenciData,
                 new String[]{
                     "No", "Okul No", "Ad", "Soyad", "Adres", "Doğum Tarihi", "Okula Başlama Tarihi", "Cinsiyet", "Aktif", "TC Kimlik No", "Bölüm"
                 }

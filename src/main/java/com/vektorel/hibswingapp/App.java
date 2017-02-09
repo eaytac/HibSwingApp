@@ -13,7 +13,7 @@ public class App {
 
 //        try {
 //            KullaniciService kullaniciService = new KullaniciService();
-//            kullaniciService.save(new Kullanici("emre", "123", "Emre AYTAÇ"));
+//            kullaniciService.save(new Kullanici(null, "emre", "123", "Emre AYTAÇ"));
 //        } catch (Exception ex) {
 //            ex.printStackTrace();
 //        }

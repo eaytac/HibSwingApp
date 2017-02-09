@@ -29,6 +29,7 @@ public class Bolum {
         this.id = id;
     }
 
+    @Column(name = "kod")
     public String getKod() {
         return kod;
     }
@@ -37,6 +38,7 @@ public class Bolum {
         this.kod = kod;
     }
 
+    @Column(name = "bolum_adi")
     public String getBolumAdi() {
         return bolumAdi;
     }
