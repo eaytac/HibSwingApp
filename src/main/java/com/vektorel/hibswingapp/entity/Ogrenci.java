@@ -140,7 +140,7 @@ public class Ogrenci {
     }
     
     @JoinColumn(name = "fotograf_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     public Fotograf getFotograf() {
         return fotograf;
     }

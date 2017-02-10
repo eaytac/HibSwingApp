@@ -21,7 +21,7 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
 
     BolumService bolumService = new BolumService();
     byte[] fotografDosyasi;
-    String secilenDosyaAdresi;
+    String fotografDosyaAdresi;
 
     /**
      * Creates new form frmOgrenciEkle
@@ -286,7 +286,7 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
                 o.setBolum(bolum);
 
                 try {
-                    FileInputStream fileInputStream = new FileInputStream(secilenDosyaAdresi);
+                    FileInputStream fileInputStream = new FileInputStream(fotografDosyaAdresi);
                     fileInputStream.read(fotografDosyasi);
                     fileInputStream.close();
                 } catch (Exception e) {
@@ -319,8 +319,8 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
 
         if (sonuc == JFileChooser.APPROVE_OPTION) {
             File secilenDosya = fileChooser.getSelectedFile();
-            secilenDosyaAdresi = secilenDosya.getAbsolutePath();
-            this.secilenDosyaAdresi = secilenDosyaAdresi;
+            String secilenDosyaAdresi = secilenDosya.getAbsolutePath();
+            this.fotografDosyaAdresi = secilenDosyaAdresi;
             this.fotografDosyasi = new byte[(int) secilenDosyaAdresi.length()];
             lblFotograf.setIcon(ResizeImage(secilenDosyaAdresi));
         } else if (sonuc == JFileChooser.CANCEL_OPTION) {
