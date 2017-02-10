@@ -1,23 +1,32 @@
 package com.vektorel.hibswingapp.ui;
 
 import com.vektorel.hibswingapp.entity.Bolum;
+import com.vektorel.hibswingapp.entity.Fotograf;
 import com.vektorel.hibswingapp.entity.Ogrenci;
 import com.vektorel.hibswingapp.service.BolumService;
 import com.vektorel.hibswingapp.service.OgrenciService;
 import com.vektorel.hibswingapp.util.DefaultComboModel;
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
 import static java.lang.Math.toIntExact;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class frmOgrenciEkle extends javax.swing.JDialog {
 
     BolumService bolumService = new BolumService();
+    byte[] fotografDosyasi;
+    String secilenDosyaAdresi;
+
     /**
      * Creates new form frmOgrenciEkle
      */
-        
+
     public frmOgrenciEkle(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -30,7 +39,7 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
         initComponents();
         setLocationRelativeTo(null);
         bolumAdlariComboboxDoldur();
-        
+
         lblId.setText(ogrenci.getId().toString());
         txtAd.setText(ogrenci.getAd());
         txtSoyad.setText(ogrenci.getSoyad());
@@ -39,13 +48,24 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
         txtDogumTarihi.setDate(ogrenci.getDogumTarihi());
         txtOkulaBaslamaTarihi.setDate(ogrenci.getOkulaBaslamaTarihi());
         cmbCinsiyet.setSelectedIndex(ogrenci.getCinsiyet());
-        if (ogrenci.getAktif() == true){
+        if (ogrenci.getAktif() == true) {
             cbAktif.setSelected(true);
         } else {
             cbAktif.setSelected(false);
         }
         txtTCKimlikNo.setText(ogrenci.getTcKimlikNo().toString());
-        cmbBolumAdi.setSelectedIndex(toIntExact(ogrenci.getBolum().getId())-1);
+        cmbBolumAdi.setSelectedIndex(toIntExact(ogrenci.getBolum().getId()) - 1);
+        
+        
+        Fotograf fotograf = ogrenci.getFotograf();
+        byte[] foto = fotograf.getImage();
+        ImageIcon image = new ImageIcon(foto);
+        Image im = image.getImage();
+        Image myImg = im.getScaledInstance(lblFotograf.getWidth(), lblFotograf.getHeight(),Image.SCALE_SMOOTH);
+        ImageIcon newImage = new ImageIcon(myImg);
+        lblFotograf.setIcon(newImage);
+
+       
     }
 
     /**
@@ -81,6 +101,8 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
         btnKaydet = new javax.swing.JButton();
         cbAktif = new javax.swing.JCheckBox();
         cmbBolumAdi = new javax.swing.JComboBox<>();
+        lblFotograf = new javax.swing.JLabel();
+        btnFotografSec = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -126,6 +148,15 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
             }
         });
 
+        lblFotograf.setBackground(javax.swing.UIManager.getDefaults().getColor("InternalFrame.activeTitleGradient"));
+
+        btnFotografSec.setText("Fotoğraf Seç");
+        btnFotografSec.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFotografSecActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -163,7 +194,11 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
                             .addComponent(txtTCKimlikNo)))
                     .addComponent(cbAktif)
                     .addComponent(cmbBolumAdi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblFotograf, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(btnFotografSec, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(29, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,7 +208,7 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
                     .addComponent(jLabel1)
                     .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
@@ -192,19 +227,24 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
                             .addComponent(txtAdres, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(jLabel7))
-                    .addComponent(txtDogumTarihi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtDogumTarihi, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(lblFotograf, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel6)
-                    .addComponent(txtOkulaBaslamaTarihi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jLabel6)
+                        .addComponent(txtOkulaBaslamaTarihi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnFotografSec))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(cmbCinsiyet, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(cbAktif))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbAktif)
+                    .addComponent(jLabel9))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
@@ -213,7 +253,7 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
                     .addComponent(cmbBolumAdi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnIptal)
                     .addComponent(btnKaydet))
@@ -228,10 +268,9 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
     }//GEN-LAST:event_btnIptalActionPerformed
 
     private void btnKaydetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnKaydetActionPerformed
-       try {
+        try {
             OgrenciService ogrenciService = new OgrenciService();
-            if (lblId.getText().equals("")){
-                Ogrenci o = new Ogrenci();
+            Ogrenci o = new Ogrenci();
                 o.setAd(txtAd.getText());
                 o.setSoyad(txtSoyad.getText());
                 o.setAdres(txtAdres.getText());
@@ -241,17 +280,29 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
                 o.setCinsiyet(cmbCinsiyet.getSelectedIndex());
                 o.setAktif(cbAktif.isSelected());
                 o.setTcKimlikNo(new Long(txtTCKimlikNo.getText()));
-                
+
                 DefaultComboModel secilen = (DefaultComboModel) cmbBolumAdi.getSelectedItem();
                 Bolum bolum = bolumService.getById(secilen.getValue());
-                
                 o.setBolum(bolum);
-                
+
+                try {
+                    FileInputStream fileInputStream = new FileInputStream(secilenDosyaAdresi);
+                    fileInputStream.read(fotografDosyasi);
+                    fileInputStream.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Fotograf fotograf = new Fotograf();
+                fotograf.setImage(fotografDosyasi);
+                o.setFotograf(fotograf);
+            
+            if (lblId.getText().equals("")) {
                 ogrenciService.save(o);
                 this.dispose();
-            }
-            else {
-                //kullaniciService.update(new Kullanici(new Long(lblId.getText()), txtKullaniciAdi.getText(), txtSifre.getText(), txtAdSoyad.getText()));
+            } else {
+                o.setId(new Long(lblId.getText()));
+                ogrenciService.update(o);
+                this.dispose();
             }
 
         } catch (Exception e) {
@@ -259,9 +310,35 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
         }
     }//GEN-LAST:event_btnKaydetActionPerformed
 
+    private void btnFotografSecActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFotografSecActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Resim dosyaları", "jpg", "png");
+        fileChooser.addChoosableFileFilter(filter);
+        int sonuc = fileChooser.showSaveDialog(null);
+
+        if (sonuc == JFileChooser.APPROVE_OPTION) {
+            File secilenDosya = fileChooser.getSelectedFile();
+            secilenDosyaAdresi = secilenDosya.getAbsolutePath();
+            this.secilenDosyaAdresi = secilenDosyaAdresi;
+            this.fotografDosyasi = new byte[(int) secilenDosyaAdresi.length()];
+            lblFotograf.setIcon(ResizeImage(secilenDosyaAdresi));
+        } else if (sonuc == JFileChooser.CANCEL_OPTION) {
+            System.out.println("Dosya seçilmedi.");
+        }
+    }//GEN-LAST:event_btnFotografSecActionPerformed
+
+    public ImageIcon ResizeImage(String fotografKonumu) {
+        ImageIcon fotograf = new ImageIcon(fotografKonumu);
+        Image img = fotograf.getImage();
+        Image newImg = img.getScaledInstance(lblFotograf.getWidth(), lblFotograf.getHeight(), Image.SCALE_SMOOTH);
+        ImageIcon image = new ImageIcon(newImg);
+        return image;
+    }
+
     List<Bolum> bolumListe = null;
-    
-    private void bolumAdlariComboboxDoldur () {
+
+    private void bolumAdlariComboboxDoldur() {
 //        BolumService bs = new BolumService();
 //        List<Bolum> bolumler = bs.getAll(null);
 //        
@@ -276,9 +353,10 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
         }
         cmbBolumAdi.setModel(new DefaultComboBoxModel(dizi));
     }
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnFotografSec;
     private javax.swing.JButton btnIptal;
     private javax.swing.JButton btnKaydet;
     private javax.swing.JCheckBox cbAktif;
@@ -295,6 +373,7 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel lblFotograf;
     private javax.swing.JLabel lblId;
     private javax.swing.JTextField txtAd;
     private javax.swing.JTextField txtAdres;

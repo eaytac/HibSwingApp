@@ -56,5 +56,6 @@ Contributor(s):
     <mapping class="com.vektorel.hibswingapp.entity.Kullanici"></mapping>
     <mapping class="com.vektorel.hibswingapp.entity.Ogrenci"></mapping>
     <mapping class="com.vektorel.hibswingapp.entity.Il"></mapping>
+    <mapping class="com.vektorel.hibswingapp.entity.Fotograf"></mapping>
   </session-factory>
 </hibernate-configuration>

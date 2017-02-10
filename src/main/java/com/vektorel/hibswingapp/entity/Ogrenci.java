@@ -2,6 +2,7 @@
 package com.vektorel.hibswingapp.entity;
 
 import java.util.Date;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -30,6 +32,7 @@ public class Ogrenci {
     private Boolean aktif;
     private Long tcKimlikNo;
     private Bolum bolum;
+    private Fotograf fotograf;
 
     @Id
     @SequenceGenerator(name = "seq_ogrenci", allocationSize = 1, sequenceName = "seq_ogrenci")
@@ -136,5 +139,14 @@ public class Ogrenci {
         this.bolum = bolum;
     }
     
+    @JoinColumn(name = "fotograf_id")
+    @OneToOne(cascade = CascadeType.ALL)
+    public Fotograf getFotograf() {
+        return fotograf;
+    }
+
+    public void setFotograf(Fotograf fotograf) {
+        this.fotograf = fotograf;
+    }
         
 }

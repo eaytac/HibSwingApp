@@ -13,7 +13,16 @@
         </repository>
     </repositories>
     <dependencies>
-<!--        <dependency>
+<!--        Veritabanı Fotoğraf için eklenenler-->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+    </dependency>
+
+<!--        Veritabanı Fotoğraf için eklenenler-->
+        
+        <!--        <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>9.1-901.jdbc4</version>
