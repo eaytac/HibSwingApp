@@ -37,7 +37,6 @@ public class Fotograf implements java.io.Serializable {
     }
 
     @Column(name = "IMAGE", nullable = false)
-    @Cascade(CascadeType.ALL)
     public byte[] getImage() {
         return this.image;
     }
