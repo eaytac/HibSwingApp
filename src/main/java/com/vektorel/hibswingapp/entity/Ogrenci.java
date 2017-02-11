@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -33,6 +34,8 @@ public class Ogrenci {
     private Long tcKimlikNo;
     private Bolum bolum;
     private Fotograf fotograf;
+    @Lob
+    private byte[] foto; 
 
     @Id
     @SequenceGenerator(name = "seq_ogrenci", allocationSize = 1, sequenceName = "seq_ogrenci")

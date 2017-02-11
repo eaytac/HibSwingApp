@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 
 public class frmAnasayfa extends javax.swing.JFrame {
 
+    public static int tabloDatasi=0;
+    //1:Ogrenci 2:kul
     Kullanici kullanici;
     KullaniciService kullaniciService = new KullaniciService();
     OgrenciService ogrenciService = new OgrenciService();
@@ -327,6 +329,7 @@ public class frmAnasayfa extends javax.swing.JFrame {
                     "No", "Ad Soyad", "Kullanıcı Adı"
                 }
         ));
+        tabloDatasi=1;
     }
     
     private void ogrenciTabloDoldur(String query) {
@@ -370,6 +373,7 @@ public class frmAnasayfa extends javax.swing.JFrame {
                     "No", "Okul No", "Ad", "Soyad", "Adres", "Doğum Tarihi", "Okula Başlama Tarihi", "Cinsiyet", "Aktif", "TC Kimlik No", "Bölüm"
                 }
         ));
+        tabloDatasi=2;
     }
 
     private void gizle() {
