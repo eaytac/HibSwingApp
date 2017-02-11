@@ -22,7 +22,7 @@ public class OgrenciService implements IService<Ogrenci> {
         }
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
-        session.save(entity);
+        session.persist(entity);
         transaction.commit();
         session.close();
         return true;
@@ -62,7 +62,9 @@ public class OgrenciService implements IService<Ogrenci> {
                 Restrictions.ilike("tc_no", query, MatchMode.ANYWHERE)));
         }
         criteria.addOrder(Order.asc("id"));
-        return criteria.list();
+        List l= criteria.list();
+        session.close();
+        return l;                
     }
 
     @Override

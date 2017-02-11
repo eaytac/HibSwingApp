@@ -130,7 +130,7 @@ public class Ogrenci {
     }
 
     @JoinColumn(name = "bolum_id")
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     public Bolum getBolum() {
         return bolum;
     }

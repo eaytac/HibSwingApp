@@ -10,6 +10,9 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
 import static java.lang.Math.toIntExact;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -288,13 +291,16 @@ public class frmOgrenciEkle extends javax.swing.JDialog {
                 try {
                     FileInputStream fileInputStream = new FileInputStream(fotografDosyaAdresi);
                     fileInputStream.read(fotografDosyasi);
+                    Path path = Paths.get(fotografDosyaAdresi);
+                    byte[] data = Files.readAllBytes(path);
+                     Fotograf fotograf = new Fotograf();
+                    fotograf.setImage(data);
+                    o.setFotograf(fotograf);
                     fileInputStream.close();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                Fotograf fotograf = new Fotograf();
-                fotograf.setImage(fotografDosyasi);
-                o.setFotograf(fotograf);
+               
             
             if (lblId.getText().equals("")) {
                 ogrenciService.save(o);
